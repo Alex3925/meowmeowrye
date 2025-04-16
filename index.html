@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator</title>
+    <title>Email and Password Generator</title>
     <style>
         body {
             margin: 0;
@@ -21,23 +21,23 @@
         }
 
         .container {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
-            padding: 20px;
+            padding: 30px;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            max-width: 450px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
             color: #ff5c8a;
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 20px;
             font-weight: 700;
         }
 
         input, button, select {
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             border: none;
             border-radius: 8px;
@@ -46,7 +46,7 @@
         }
 
         input, select {
-            background-color: #333;
+            background-color: #444;
             color: #fff;
             border: 1px solid #ff5c8a;
         }
@@ -56,6 +56,7 @@
             color: white;
             cursor: pointer;
             font-weight: 700;
+            transition: background-color 0.3s;
         }
 
         button:hover {
@@ -76,11 +77,12 @@
         .output {
             margin-top: 15px;
             background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
             word-wrap: break-word;
             display: inline-block;
             font-size: 16px;
+            text-align: left;
         }
 
         .author {
@@ -89,15 +91,20 @@
             color: #ddd;
         }
 
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Generator</h1>
+        <h1>Email & Password Generator</h1>
 
-        <input type="text" id="prefix" placeholder="Enter Gmail prefix" />
-        <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" />
-        <input type="number" id="passwordLength" value="12" min="6" max="30" placeholder="Password length" />
+        <input type="text" id="prefix" placeholder="Enter Gmail prefix" required />
+        <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" required />
+        <input type="number" id="passwordLength" value="12" min="6" max="30" placeholder="Password length" required />
         
         <div class="checkbox-container">
             <label>
@@ -129,7 +136,7 @@
             <option value="none">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-            <option value="other">Other</option>
+ <option value="other">Other</option>
         </select>
 
         <button onclick="generate()">Generate</button>
@@ -171,10 +178,7 @@
                 password += characters.charAt(Math.floor(Math.random() * characters.length));
             }
 
-            let generatedNickname = nickname;
-            if (!nickname) {
-                generatedNickname = "user" + randomNumbers;
-            }
+            let generatedNickname = nickname || "user" + randomNumbers;
 
             let birthdayInfo = "";
             if (includeBirthday) {
@@ -217,7 +221,6 @@
             });
         }
 
-        // Toggle birthday fields based on checkbox
         document.getElementById("includeBirthday").addEventListener("change", function() {
             const birthdayFields = document.getElementById("birthdayFields");
             birthdayFields.style.display = this.checked ? "block" : "none";
