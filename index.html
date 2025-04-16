@@ -65,31 +65,20 @@
             background-color: #5a0db0;
         }
 
-        .checkbox-container {
-            display: flex;
-            justify-content: space-between;
-            color: #333;
-            margin-top: 10px;
-            width: 100%;
-        }
-
         .toggle-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            margin: 5px 0;
-            padding: 10px;
-            border: 2px solid rgb(106, 17, 203);
+            background-color: #6a11cb;
+            color: white;
+            border: none;
             border-radius: 5px;
+            padding: 10px 15px;
             cursor: pointer;
-            background-color: #f0f0f0;
+            margin: 5px 0;
+            width: 100%;
             transition: background-color 0.3s;
         }
 
         .toggle-button.active {
             background-color: #4caf50;
-            color: white;
         }
 
         .output {
@@ -115,6 +104,12 @@
             text-decoration: none;
         }
 
+        .facebook-logo {
+            width: 20px; /* Adjusted size */
+            height: 20px; /* Adjusted size */
+            margin-left: 5px;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -131,21 +126,10 @@
         <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" required />
         <input type="number" id="passwordLength" value="12" min="6" max="30" placeholder="Password length" required />
 
-        <div class="checkbox-container">
-            <div class="toggle-button" id="uppercaseToggle" onclick="toggleOption('uppercase')">
-                Uppercase
-            </div>
-            <div class="toggle-button" id="numbersToggle" onclick="toggleOption('numbers')">
-                Numbers
-            </div>
-            <div class="toggle-button" id="specialCharsToggle" onclick="toggleOption('specialChars')">
-                Special Chars
-            </div>
-        </div>
-
-        <div class="toggle-button" id="randomizeEmailToggle" onclick ="toggleOption('randomizeEmail')">
-            Randomize Email
-        </div>
+        <button class="toggle-button" id="uppercaseToggle" onclick="toggleOption('uppercase')">Uppercase</button>
+        <button class="toggle-button" id="numbersToggle" onclick="toggleOption('numbers')">Numbers</button>
+        <button class="toggle-button" id="specialCharsToggle" onclick="toggleOption('specialChars')">Special Chars</button>
+        <button class="toggle-button" id="randomizeEmailToggle" onclick="toggleOption('randomizeEmail')">Randomize Email Prefix</button>
 
         <button onclick="generateEmail()">Generate Email</button>
         <button onclick="generatePassword()">Generate Password</button>
@@ -154,17 +138,14 @@
         <div class="output" id="passwordOutput"></div>
 
         <div class="footer">
-            <p>Made By Alex <a href="https://www.facebook.com/share/1AWwtvcb8b/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="facebook-logo"></a></p>
+            <p>Made By Alex <a href="https://www.facebook.com/alexdev01" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="facebook-logo"></a></p>
         </div>
     </div>
 
     <script>
-        let options = {
-            uppercase: false,
-            numbers: false,
-            specialChars: false,
-            randomizeEmail: false
-        };
+        let includeUppercase = false;
+        let includeNumbers = false;
+        let includeSpecialChars = false;
 
         function toggleTheme() {
             const body = document.body;
@@ -179,32 +160,30 @@
         }
 
         function toggleOption(option) {
-            options[option] = !options[option];
-            const toggleButton = document.getElementById(`${option}Toggle`);
-            toggleButton.classList.toggle('active');
+            if (option === 'uppercase') {
+                includeUppercase = !includeUppercase;
+                document.getElementById('uppercaseToggle').classList.toggle('active', includeUppercase);
+            } else if (option === 'numbers') {
+                includeNumbers = !includeNumbers;
+                document.getElementById('numbersToggle').classList.toggle('active', includeNumbers);
+            } else if (option === 'specialChars') {
+                includeSpecialChars = !includeSpecialChars;
+                document.getElementById('specialCharsToggle').classList.toggle('active', includeSpecialChars);
+            } else if (option === 'randomizeEmail') {
+                const prefixInput = document.getElementById('prefix');
+                prefixInput.value = Math.random().toString(36).substring(2, 15);
+            }
         }
 
         function generateEmail() {
             const prefix = document.getElementById('prefix').value;
             const domain = document.getElementById('domain').value;
-            let email = prefix;
-
-            if (options.randomizeEmail) {
-                const randomPrefix = Math.random().toString(36).substring(2, 10);
-                email = `${randomPrefix}@${domain}`;
-            } else {
-                email = `${prefix}@${domain}`;
-            }
-
+            const email = `${prefix}@${domain}`;
             document.getElementById('emailOutput').innerText = email;
         }
 
         function generatePassword() {
             const length = document.getElementById('passwordLength').value;
-            const includeUppercase = options.uppercase;
-            const includeNumbers = options.numbers;
-            const includeSpecialChars = options.specialChars;
-
             let charset = "abcdefghijklmnopqrstuvwxyz";
             if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             if (includeNumbers) charset += "0123456789";
