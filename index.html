@@ -4,24 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Info Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            color: #fff;
+            color: #333;
             text-align: center;
-            background: url('tutu.png') no-repeat center center fixed;
-            background-size: cover;
-            backdrop-filter: brightness(0.4);
-            font-weight: 600;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            transition: background 0.5s;
         }
 
         .container {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             padding: 30px;
             width: 90%;
@@ -33,7 +32,7 @@
         }
 
         h1 {
-            color: #ff5c8a;
+            color: #6a11cb;
             font-size: 2.5em;
             margin-bottom: 20px;
             font-weight: 700;
@@ -46,37 +45,37 @@
             border-radius: 8px;
             width: 100%;
             font-size: 16px;
+            transition: all 0.3s;
         }
 
         input, select {
-            background-color: #444;
-            color: #fff;
-            border: 1px solid #ff5c8a;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #6a11cb;
         }
 
         button {
-            background-color: #ff5c8a;
+            background-color: #6a11cb;
             color: white;
             cursor: pointer;
             font-weight: 700;
-            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #e14a70;
+            background-color: #5a0db0;
         }
 
         .checkbox-container {
             display: flex;
             justify-content: space-between;
-            color: #ddd;
+            color: #333;
             margin-top: 10px;
             width: 100%;
         }
 
         .output {
             margin-top: 15px;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.1);
             padding: 15px;
             border-radius: 8px;
             word-wrap: break-word;
@@ -86,10 +85,35 @@
             width: 100%;
         }
 
-        .author {
+        .footer {
             margin-top: 20px;
             font-size: 14px;
-            color: #ddd;
+            color: #333;
+        }
+
+        .footer a {
+            color: #6a11cb;
+            text-decoration: none;
+        }
+
+        .toggle-button {
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .toggle-button:hover {
+            background-color: #5a0db0;
+        }
+
+        .facebook-logo {
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
         }
 
         @media (max-width: 600px) {
@@ -102,6 +126,7 @@
 <body>
     <div class="container">
         <h1>Email Info Generator</h1>
+        <button class="toggle-button" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
 
         <input type="text" id="prefix" placeholder="Enter Gmail prefix" required />
         <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" required />
@@ -119,113 +144,55 @@
             </label>
         </div>
 
-        <input type="text" id="nickname" placeholder="Enter nickname" />
-        
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="includeBirthday"> Include Birthday
-            </label>
+ <button onclick="generateEmail()">Generate Email</button>
+        <button onclick="generatePassword()">Generate Password</button>
+
+        <div class="output" id="emailOutput"></div>
+        <div class="output" id="passwordOutput"></div>
+
+        <div class="footer">
+            <p>Made By Alex <a href="https://www.facebook.com/alexdev01" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="facebook-logo"></a></p>
         </div>
-
-        <div id="birthdayFields" style="display:none;">
-            <input type="number" id="birthYear" placeholder="Year (YYYY)" min="1900" max="2024" />
-            <input type="number" id="birthMonth" placeholder="Month (1-12)" min="1" max="12" />
-            <input type="number" id="birthDay" placeholder="Day (1-31)" min="1" max="31" />
-        </div>
-
-        <select id="genderSelect">
-            <option value="none">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
-
-        <button onclick=" generate()">Generate</button>
-
-        <div class="output" id="output"></div>
-        
-        <button onclick="copyResult()">Copy result</button>
-
-        <div class="author">Created by sarammul (Enhanced & Modified by Alex)</div>
     </div>
 
     <script>
-        function generate() {
-            const prefix = document.getElementById("prefix").value || "user";
-            const domain = document.getElementById("domain").value || "gmail.com";
-            const passwordLength = parseInt(document.getElementById("passwordLength").value, 10) || 12;
-            const includeUppercase = document.getElementById("includeUppercase").checked;
-            const includeNumbers = document.getElementById("includeNumbers").checked;
-            const includeSpecialChars = document.getElementById("includeSpecialChars").checked;
-            const nickname = document.getElementById("nickname").value || "";
-            const includeBirthday = document.getElementById("includeBirthday").checked;
-            const gender = document.getElementById("genderSelect").value;
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                body.style.background = '#333';
+                body.style.color = '#fff';
+            } else {
+                body.style.background = 'linear-gradient(135deg, #6a11cb, #2575fc)';
+                body.style.color = '#333';
+            }
+        }
 
-            const randomNumbers = Math.floor(Math.random() * 10000);
-            const email = `${prefix}${randomNumbers}@${domain}`;
+        function generateEmail() {
+            const prefix = document.getElementById('prefix').value;
+            const domain = document.getElementById('domain').value;
+            const email = `${prefix}@${domain}`;
+            document.getElementById('emailOutput').innerText = email;
+        }
 
-            const lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
-            const upperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const numberChars = "0123456789";
-            const specialChars = "!@#$%^&*()";
+        function generatePassword() {
+            const length = document.getElementById('passwordLength').value;
+            const includeUppercase = document.getElementById('includeUppercase').checked;
+            const includeNumbers = document.getElementById('includeNumbers').checked;
+            const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
 
-            let characters = lowerCaseChars;
-            if (includeUppercase) characters += upperCaseChars;
-            if (includeNumbers) characters += numberChars;
-            if (includeSpecialChars) characters += specialChars;
+            let charset = "abcdefghijklmnopqrstuvwxyz";
+            if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (includeNumbers) charset += "0123456789";
+            if (includeSpecialChars) charset += "!@#$%^&*()_+[]{}|;:,.<>?";
 
             let password = "";
-            for (let i = 0; i < passwordLength; i++) {
-                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
             }
-
-            let generatedNickname = nickname || "user" + randomNumbers;
-
-            let birthdayInfo = "";
-            if (includeBirthday) {
-                const birthYear = document.getElementById("birthYear").value || "";
-                const birthMonth = document.getElementById("birthMonth").value || "";
-                const birthDay = document.getElementById("birthDay").value || "";
-                if (birthYear && birthMonth && birthDay) {
-                    birthdayInfo = `Birthdate: ${birthYear}-${birthMonth}-${birthDay}`;
-                }
-            }
-
-            const outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = ` 
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Password:</strong> ${password}</p>
-                <p><strong>Nickname:</strong> ${generatedNickname}</p>
-                ${birthdayInfo ? `<p><strong>${birthdayInfo}</strong></p>` : ""}
-                <p><strong>Gender:</strong> ${gender !== "none" ? gender : "Not specified"}</p>
-            `;
-            outputDiv.dataset.email = email;
-            outputDiv.dataset.password = password;
-            outputDiv.dataset.nickname = generatedNickname;
-            outputDiv.dataset.birthday = birthdayInfo;
-            outputDiv.dataset.gender = gender !== "none" ? gender : "Not specified";
+            document.getElementById('passwordOutput').innerText = password;
         }
-
-        function copyResult() {
-            const outputDiv = document.getElementById("output");
-            const email = outputDiv.dataset.email || "";
-            const password = outputDiv.dataset.password || "";
-            const nickname = outputDiv.dataset.nickname || "";
-            const birthday = outputDiv.dataset.birthday || "";
-            const gender = outputDiv.dataset.gender || "";
-
-            const result = `Email: ${email}\nPassword: ${password}\nNickname: ${nickname}\n${birthday}\nGender: ${gender}`;
-            navigator.clipboard.writeText(result).then(() => {
-                alert("Result copied!");
-            }).catch(err => {
-                console.error("Error copying: ", err);
-            });
-        }
-
-        document.getElementById("includeBirthday").addEventListener("change", function() {
-            const birthdayFields = document.getElementById("birthdayFields");
-            birthdayFields.style.display = this.checked ? "block" : "none";
-        });
     </script>
 </body>
 </html>
