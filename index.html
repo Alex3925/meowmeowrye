@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email and Password Generator</title>
+    <title>Email Info Generator</title>
     <style>
         body {
             margin: 0;
@@ -24,9 +24,12 @@
             background-color: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
             padding: 30px;
-            width: 100%;
+            width: 90%;
             max-width: 450px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         h1 {
@@ -68,10 +71,7 @@
             justify-content: space-between;
             color: #ddd;
             margin-top: 10px;
-        }
-
-        .checkbox-container label {
-            font-size: 14px;
+            width: 100%;
         }
 
         .output {
@@ -83,6 +83,7 @@
             display: inline-block;
             font-size: 16px;
             text-align: left;
+            width: 100%;
         }
 
         .author {
@@ -100,7 +101,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Email & Password Generator</h1>
+        <h1>Email Info Generator</h1>
 
         <input type="text" id="prefix" placeholder="Enter Gmail prefix" required />
         <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" required />
@@ -136,16 +137,16 @@
             <option value="none">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
- <option value="other">Other</option>
+            <option value="other">Other</option>
         </select>
 
-        <button onclick="generate()">Generate</button>
+        <button onclick=" generate()">Generate</button>
 
         <div class="output" id="output"></div>
         
         <button onclick="copyResult()">Copy result</button>
 
-        <div class="author">Created by sarammul</div>
+        <div class="author">Created by sarammul (Enhanced & Modified by Alex)</div>
     </div>
 
     <script>
