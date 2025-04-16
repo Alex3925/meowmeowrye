@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Info Generator</title>
+    <title>Email and Password Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
@@ -73,6 +73,25 @@
             width: 100%;
         }
 
+        .toggle-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 2px solid rgb(106, 17, 203);
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button.active {
+            background-color: #4caf50;
+            color: white;
+        }
+
         .output {
             margin-top: 15px;
             background-color: rgba(0, 0, 0, 0.1);
@@ -96,26 +115,6 @@
             text-decoration: none;
         }
 
-        .toggle-button {
-            background-color: #6a11cb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .toggle-button:hover {
-            background-color: #5a0db0;
-        }
-
-        .facebook-logo {
-            width: 30px;
-            height: 30px;
-            margin-left: 5px;
-        }
-
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -125,37 +124,48 @@
 </head>
 <body>
     <div class="container">
-        <h1>Email Info Generator</h1>
+        <h1>Email & Password Generator</h1>
         <button class="toggle-button" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
 
         <input type="text" id="prefix" placeholder="Enter Gmail prefix" required />
         <input type="text" id="domain" value="gmail.com" placeholder="Enter domain" required />
         <input type="number" id="passwordLength" value="12" min="6" max="30" placeholder="Password length" required />
-        
+
         <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="includeUppercase"> Uppercase
-            </label>
-            <label>
-                <input type="checkbox" id="includeNumbers"> Numbers
-            </label>
-            <label>
-                <input type="checkbox" id="includeSpecialChars"> Special Chars
-            </label>
+            <div class="toggle-button" id="uppercaseToggle" onclick="toggleOption('uppercase')">
+                Uppercase
+            </div>
+            <div class="toggle-button" id="numbersToggle" onclick="toggleOption('numbers')">
+                Numbers
+            </div>
+            <div class="toggle-button" id="specialCharsToggle" onclick="toggleOption('specialChars')">
+                Special Chars
+            </div>
         </div>
 
- <button onclick="generateEmail()">Generate Email</button>
+        <div class="toggle-button" id="randomizeEmailToggle" onclick ="toggleOption('randomizeEmail')">
+            Randomize Email
+        </div>
+
+        <button onclick="generateEmail()">Generate Email</button>
         <button onclick="generatePassword()">Generate Password</button>
 
         <div class="output" id="emailOutput"></div>
         <div class="output" id="passwordOutput"></div>
 
         <div class="footer">
-            <p>Made By Alex <a href="https://www.facebook.com/alexdev01" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="facebook-logo"></a></p>
+            <p>Made By Alex <a href="https://www.facebook.com/share/1AWwtvcb8b/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="facebook-logo"></a></p>
         </div>
     </div>
 
     <script>
+        let options = {
+            uppercase: false,
+            numbers: false,
+            specialChars: false,
+            randomizeEmail: false
+        };
+
         function toggleTheme() {
             const body = document.body;
             body.classList.toggle('dark-mode');
@@ -168,18 +178,32 @@
             }
         }
 
+        function toggleOption(option) {
+            options[option] = !options[option];
+            const toggleButton = document.getElementById(`${option}Toggle`);
+            toggleButton.classList.toggle('active');
+        }
+
         function generateEmail() {
             const prefix = document.getElementById('prefix').value;
             const domain = document.getElementById('domain').value;
-            const email = `${prefix}@${domain}`;
+            let email = prefix;
+
+            if (options.randomizeEmail) {
+                const randomPrefix = Math.random().toString(36).substring(2, 10);
+                email = `${randomPrefix}@${domain}`;
+            } else {
+                email = `${prefix}@${domain}`;
+            }
+
             document.getElementById('emailOutput').innerText = email;
         }
 
         function generatePassword() {
             const length = document.getElementById('passwordLength').value;
-            const includeUppercase = document.getElementById('includeUppercase').checked;
-            const includeNumbers = document.getElementById('includeNumbers').checked;
-            const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
+            const includeUppercase = options.uppercase;
+            const includeNumbers = options.numbers;
+            const includeSpecialChars = options.specialChars;
 
             let charset = "abcdefghijklmnopqrstuvwxyz";
             if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
